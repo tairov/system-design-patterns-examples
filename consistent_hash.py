@@ -11,6 +11,7 @@ nodes are added or removed.
 """
 import hashlib
 
+
 def consistent_hash_ring(key, nodes, num_virtual_nodes):
     """
     Calculates the consistent hash value for a given key and set of 
@@ -19,14 +20,15 @@ def consistent_hash_ring(key, nodes, num_virtual_nodes):
     points = {}
     for node in nodes:
         for i in range(num_virtual_nodes):
-            h = hashlib.md5(node + '-' + str(i)).hexdigest()
+            h = hashlib.md5((node + '-' + str(i)).encode()).hexdigest()
             points[int(h, 16)] = node
     sorted_points = sorted(points.keys())
-    hash_value = int(hashlib.md5(key).hexdigest(), 16)
+    hash_value = int(hashlib.md5(key.encode()).hexdigest(), 16)
     for point in sorted_points:
         if hash_value <= point:
             return points[point]
     return points[sorted_points[0]]
+
 
 # Example usage
 nodes = ['node1', 'node2', 'node3']
